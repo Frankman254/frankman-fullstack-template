@@ -4,16 +4,41 @@
 
 ## ⚡ Inicio Rápido
 
-```bash
-# 1. Configuración básica
-./scripts/setup.sh
+### Windows (PowerShell)
 
-# 2. Personalización completa (recomendado)
-./scripts/init-project.sh
+```powershell
+# Opción 1: Script automático (recomendado)
+.\scripts\setup.ps1
 
-# 3. Desarrollo (2 terminales)
+# Opción 2: Manual
+npm install --force
+npm run setup
+
+# Desarrollo (2 terminales)
 npm run dev:api    # Terminal 1 - Backend
 npm run dev:web    # Terminal 2 - Frontend
+```
+
+### Linux/Mac
+
+```bash
+# Opción 1: Script automático (recomendado)
+./scripts/setup.sh
+
+# Opción 2: Manual
+npm install
+npm run setup
+
+# Desarrollo (2 terminales)
+npm run dev:api    # Terminal 1 - Backend
+npm run dev:web    # Terminal 2 - Frontend
+```
+
+### Instalación Rápida (Todos los sistemas)
+
+```bash
+npm install --force
+npm run dev:web
 ```
 
 ## 🎯 Plantilla Reutilizable
@@ -21,7 +46,7 @@ npm run dev:web    # Terminal 2 - Frontend
 Esta plantilla está diseñada para ser **completamente personalizable**:
 
 - ✅ **Nombre de la aplicación** configurable
-- ✅ **Puertos dinámicos** para frontend y backend  
+- ✅ **Puertos dinámicos** para frontend y backend
 - ✅ **Configuración de base de datos** personalizable
 - ✅ **Variables de entorno** generadas automáticamente
 - ✅ **Scripts de inicialización** interactivos
@@ -43,6 +68,7 @@ frankman-task-fast/
 ## 🚀 Comandos Principales
 
 ### Desarrollo
+
 ```bash
 npm run dev         # Ambos juntos
 npm run dev:web     # Solo frontend
@@ -50,6 +76,7 @@ npm run dev:api     # Solo backend
 ```
 
 ### Build y Deploy
+
 ```bash
 npm run build       # Construir ambos
 npm run build:web   # Solo frontend
@@ -57,6 +84,7 @@ npm run build:api   # Solo backend
 ```
 
 ### Calidad de Código
+
 ```bash
 npm run lint        # Lint ambos
 npm run type-check  # Verificar tipos
@@ -66,18 +94,21 @@ npm run clean       # Limpiar builds
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
+
 - **React 19** + **TypeScript**
 - **Vite** para desarrollo rápido
 - **Tailwind CSS** para estilos
 - **ESLint** con tabs
 
 ### Backend
+
 - **Express.js** + **TypeScript**
 - **PostgreSQL** con conexión configurada
 - **Endpoints básicos** para testing
 - **Plantilla limpia** lista para personalizar
 
 ### Compartido
+
 - **npm workspaces** para monorepo
 - **Tipos compartidos** entre apps
 - **Configuraciones centralizadas**
@@ -85,17 +116,30 @@ npm run clean       # Limpiar builds
 ## 🔧 Configuración Manual
 
 ### 1. Instalación
+
+**Windows:**
+
+```powershell
+npm install --force
+```
+
+**Linux/Mac:**
+
 ```bash
 npm install
 ```
 
+> **Nota para Windows:** Se usa `--force` para asegurar que las dependencias opcionales de Rollup se instalen correctamente. Esto es necesario debido a un bug conocido de npm con dependencias opcionales en Windows.
+
 ### 2. Variables de Entorno
+
 ```bash
 cp .env.example .env
 # Editar .env con tus credenciales
 ```
 
 ### 3. Base de Datos
+
 ```bash
 # Crear base de datos
 createdb frankman_task_fast
@@ -124,6 +168,7 @@ npm run seed
 ## 📚 Documentación Completa
 
 Para documentación detallada, configuración avanzada y ejemplos, consulta:
+
 - **`TEMPLATE-USAGE.md`** - Guía de uso de la plantilla
 - **`template-config.md`** - Documentación completa de la plantilla
 - **`IMPLEMENTATION.md`** - Detalles técnicos de la implementación
@@ -132,12 +177,14 @@ Para documentación detallada, configuración avanzada y ejemplos, consulta:
 ## 🚀 Deploy
 
 ### Frontend (Vercel/Netlify)
+
 ```bash
 npm run build:web
 # Deploy dist/ folder
 ```
 
 ### Backend (Railway/Heroku)
+
 ```bash
 npm run build:api
 # Deploy con variables de entorno

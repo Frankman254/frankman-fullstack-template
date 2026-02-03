@@ -1,5 +1,7 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import prettier from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
 
 export default tseslint.config(
 	{
@@ -8,6 +10,9 @@ export default tseslint.config(
 	js.configs.recommended,
 	...tseslint.configs.recommended,
 	{
+		plugins: {
+			prettier,
+		},
 		languageOptions: {
 			globals: {
 				process: 'readonly',
@@ -21,9 +26,14 @@ export default tseslint.config(
 			},
 		},
 		rules: {
-			'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+			'prettier/prettier': 'error',
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{ argsIgnorePattern: '^_' },
+			],
 			'@typescript-eslint/no-explicit-any': 'warn',
-			'indent': ['error', 'tab'],
+			indent: 'off', // Desactivar indent de ESLint, usar Prettier
 		},
-	}
+	},
+	prettierConfig
 );
