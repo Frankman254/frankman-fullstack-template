@@ -56,11 +56,8 @@ Esta plantilla está diseñada para ser **completamente personalizable**:
 ```
 frankman-task-fast/
 ├─ apps/
-│  ├─ web/          # React + Vite + Tailwind
-│  └─ api/          # Express + TypeScript + PostgreSQL
-├─ packages/
-│  ├─ types/        # Tipos compartidos
-│  └─ config/       # Configuraciones centralizadas
+│  ├─ web/          # React + Vite + Tailwind (frontend)
+│  └─ api/          # Express + TypeScript + PostgreSQL (backend)
 ├─ scripts/         # Scripts de configuración
 └─ .env.example     # Variables de entorno
 ```
@@ -131,24 +128,39 @@ npm install
 
 > **Nota para Windows:** Se usa `--force` para asegurar que las dependencias opcionales de Rollup se instalen correctamente. Esto es necesario debido a un bug conocido de npm con dependencias opcionales en Windows.
 
-### 2. Variables de Entorno
+### 2. Base de datos en Docker (PostgreSQL)
+
+**Este proyecto usa PostgreSQL**, no SQL Server. Si ya tienes SQL Server en Docker (puerto 1433), necesitas un contenedor aparte para PostgreSQL (puerto 5432).
+
+Desde la raíz del proyecto:
+
+```bash
+# Levantar solo PostgreSQL (nombre del contenedor: frankman-task-fast-db)
+docker compose up -d
+
+# Ver logs
+docker compose logs -f postgres
+```
+
+Valores por defecto del contenedor (coinciden con el código): usuario `postgres`, contraseña `password`, base de datos `frankman_task_fast`, puerto **5432**. Para usar otros valores, define `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_PORT` en tu `.env` antes de `docker compose up`.
+
+### 3. Variables de Entorno
 
 ```bash
 cp .env.example .env
-# Editar .env con tus credenciales
+# Editar .env con tus credenciales (DB_HOST=localhost, DB_PORT=5432 para Docker)
 ```
 
-### 3. Base de Datos
+### 4. Base de Datos (tras tener PostgreSQL corriendo)
 
 ```bash
-# Crear base de datos
-createdb frankman_task_fast
+# Si usas Docker: la base ya está creada al levantar el contenedor
 
-# Ejecutar migraciones
+# Ejecutar migraciones (cuando existan)
 cd apps/api
 npm run migrate
 
-# Poblar con datos de ejemplo
+# Poblar con datos de ejemplo (cuando existan)
 npm run seed
 ```
 

@@ -1,31 +1,23 @@
-import 'dotenv/config';
-import { Pool } from 'pg';
+/**
+ * CONEXIÓN A POSTGRESQL
+ * ---------------------
+ * Este archivo crea un "pool" (grupo de conexiones) a la base de datos.
+ * Usamos un pool para no abrir/cerrar una conexión en cada request;
+ * el pool reutiliza conexiones y así la API va más rápido.
+ */
 
-// Configuración de base de datos
-const DATABASE_CONFIG = {
-	host: process.env.DB_HOST || 'localhost',
-	port: parseInt(process.env.DB_PORT || '5432'),
-	user: process.env.DB_USER || 'postgres',
-	password: process.env.DB_PASSWORD || 'password',
-	database: process.env.DB_NAME || 'frankman_task_fast',
-	url:
-		process.env.DATABASE_URL ||
-		`postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || 'password'}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'frankman_task_fast'}`,
-};
+import 'dotenv/config'; // Lee el archivo .env y pone las variables en process.env
+import { Pool } from 'pg'; // Pool es la clase del paquete "pg" para conectar a PostgreSQL
 
+// Cadena de conexión: "postgresql://usuario:contraseña@servidor:puerto/nombre_base"
+// Exportada solo para pruebas (ej. mostrarla en el frontend); en producción no exponer.
+export const connectionString = `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+// Creamos el pool con esa cadena. Lo exportamos para usarlo en las rutas (app.ts).
 export const pool = new Pool({
-	connectionString: DATABASE_CONFIG.url,
-	ssl:
-		process.env.NODE_ENV === 'production'
-			? { rejectUnauthorized: false }
-			: false,
+	connectionString,
+	ssl: false, // En desarrollo no usamos SSL; en producción suele ser true
 });
 
-// Test the connection
-pool.on('connect', () => {
-	console.log('📦 Connected to PostgreSQL database');
-});
-
-pool.on('error', err => {
-	console.error('❌ Database connection error:', err);
-});
+// Opcional: escuchar eventos del pool para ver en consola cuándo hay conexión o error
+pool.on('connect', () => console.log('📦 Conectado a PostgreSQL'));
+pool.on('error', err => console.error('❌ Error de base de datos:', err));

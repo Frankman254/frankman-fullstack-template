@@ -1,21 +1,18 @@
-import 'dotenv/config';
+/**
+ * ENTRADA DEL SERVIDOR (PUNTO DE ARRANQUE)
+ * -----------------------------------------
+ * Este es el archivo que ejecutas con "npm run dev".
+ * Solo hace dos cosas: cargar variables de entorno y poner la app a escuchar en un puerto.
+ */
+
+import 'dotenv/config'; // Primero cargar .env para que process.env tenga DB_HOST, etc.
 import { app } from './app.js';
 
-// Configuración del servidor
-const SERVER_CONFIG = {
-	port: parseInt(process.env.BACKEND_PORT || '3001'),
-	host: process.env.HOST || 'localhost',
-};
+const port = parseInt(process.env.BACKEND_PORT || '3001', 10);
+const host = process.env.BACKEND_HOST || '0.0.0.0'; // 0.0.0.0 = aceptar conexiones por IP y localhost
 
-const APP_CONFIG = {
-	name: process.env.APP_NAME || 'FrankmanTaskFast',
-};
-
-app.listen(SERVER_CONFIG.port, SERVER_CONFIG.host, () => {
-	console.log(
-		`🚀 ${APP_CONFIG.name} API running on http://${SERVER_CONFIG.host}:${SERVER_CONFIG.port}`
-	);
-	console.log(
-		`📊 Health check: http://${SERVER_CONFIG.host}:${SERVER_CONFIG.port}/health`
-	);
+// app.listen(puerto, host, callback) inicia el servidor HTTP.
+// Cuando alguien hace una petición a http://localhost:3001/..., Express la recibe y la pasa a las rutas de app.ts.
+app.listen(port, host, () => {
+	console.log(`🚀 API en http://${host}:${port}`);
 });

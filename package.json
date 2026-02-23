@@ -4,12 +4,11 @@
 	"version": "0.0.0",
 	"type": "module",
 	"workspaces": [
-		"apps/*",
-		"packages/*"
+		"apps/*"
 	],
 	"scripts": {
 		"postinstall": "node scripts/postinstall.js",
-		"dev": "npm run dev --workspaces --if-present",
+		"dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
 		"dev:web": "cd apps/web && npm run dev",
 		"dev:api": "cd apps/api && npm run dev",
 		"build": "npm run build --workspaces --if-present",
@@ -29,10 +28,12 @@
 		"type-check": "npm run type-check --workspaces --if-present",
 		"type-check:web": "cd apps/web && npm run type-check",
 		"type-check:api": "cd apps/api && npm run type-check",
+		"db:schema": "cd apps/api && npm run db:schema",
 		"setup": "node scripts/setup.js"
 	},
 	"devDependencies": {
 		"baseline-browser-mapping": "^2.9.19",
+		"concurrently": "^9.1.2",
 		"typescript": "~5.8.3"
 	}
 }

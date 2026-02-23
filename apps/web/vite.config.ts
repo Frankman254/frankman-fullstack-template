@@ -1,5 +1,9 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -7,6 +11,9 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		plugins: [react()],
+		resolve: {
+			alias: { '@shared': path.resolve(__dirname, '../../shared') },
+		},
 		server: {
 			port: parseInt(env.FRONTEND_PORT || '5173'),
 			host: true,

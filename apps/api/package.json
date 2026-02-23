@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "tsx watch src/server.ts",
 		"build": "tsc",
+		"db:schema": "tsx src/db/run-schema.ts",
 		"start": "node dist/server.js",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
@@ -15,8 +16,6 @@
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
-		"@frankman-task-fast/config": "*",
-		"@frankman-task-fast/types": "*",
 		"cors": "^2.8.5",
 		"dotenv": "^17.2.2",
 		"express": "^4.21.1",
