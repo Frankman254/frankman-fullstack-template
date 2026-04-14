@@ -12,7 +12,12 @@ export default defineConfig(({ mode }) => {
 	return {
 		plugins: [react()],
 		resolve: {
-			alias: { '@shared': path.resolve(__dirname, '../../shared') },
+			alias: {
+				'@fullstack-starter/shared': path.resolve(
+					__dirname,
+					'../../packages/shared/src/index.ts'
+				),
+			},
 		},
 		server: {
 			port: parseInt(env.FRONTEND_PORT || '5173'),
@@ -20,7 +25,7 @@ export default defineConfig(({ mode }) => {
 			strictPort: true, // Falla si el puerto está ocupado
 		},
 		define: {
-			__APP_NAME__: JSON.stringify(env.APP_NAME || 'FrankmanTaskFast'),
+			__APP_NAME__: JSON.stringify(env.APP_NAME || 'MyApp'),
 			__API_URL__: JSON.stringify(
 				env.API_BASE_URL || 'http://localhost:3001'
 			),

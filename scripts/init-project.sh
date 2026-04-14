@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🚀 FrankmanTaskFast - Script de Inicialización de Proyecto
+# Full-Stack Starter — script de inicialización de proyecto
 # Este script personaliza la plantilla para tu nuevo proyecto
 
 set -e
@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 # Función para imprimir mensajes
 print_header() {
     echo -e "${PURPLE}================================${NC}"
-    echo -e "${PURPLE}🚀 FrankmanTaskFast - Inicialización${NC}"
+    echo -e "${PURPLE}🚀 Full-Stack Starter - Inicialización${NC}"
     echo -e "${PURPLE}================================${NC}"
     echo
 }
@@ -130,8 +130,8 @@ main() {
     print_status "Configuración de base de datos:"
     DB_NAME=$(get_input "Nombre de la base de datos" "$(generate_db_name "$APP_NAME")")
     DB_HOST=$(get_input "Host de la base de datos" "localhost")
-    DB_PORT=$(get_input "Puerto de PostgreSQL" "5432")
-    DB_USER=$(get_input "Usuario de la base de datos" "postgres")
+    DB_PORT=$(get_input "Puerto de SQL Server" "1433")
+    DB_USER=$(get_input "Usuario de la base de datos" "sa")
     DB_PASSWORD=$(get_input "Contraseña de la base de datos" "password")
     
     echo
@@ -226,32 +226,19 @@ EOF
     
     # Actualizar README.md
     print_status "Actualizando README.md..."
-    update_file "README.md" "FrankmanTaskFast" "$APP_NAME"
+    update_file "README.md" "Full-Stack Starter" "$APP_NAME"
     update_file "README.md" "Kanban-Gantt Project Management" "$APP_DESCRIPTION"
     
     # Actualizar template-config.md
     print_status "Actualizando documentación..."
-    update_file "template-config.md" "FrankmanTaskFast" "$APP_NAME"
+    update_file "template-config.md" "Full-Stack Starter" "$APP_NAME"
     update_file "template-config.md" "Kanban-Gantt Project Management" "$APP_DESCRIPTION"
     
     # Instalar dependencias
     print_status "Instalando dependencias..."
     npm install
     
-    # Crear base de datos si PostgreSQL está disponible
-    if command -v psql &> /dev/null; then
-        if confirm "¿Crear la base de datos '$DB_NAME'?"; then
-            print_status "Creando base de datos..."
-            createdb "$DB_NAME" 2>/dev/null || print_warning "Base de datos ya existe o error al crear"
-            
-        # Test de conexión a la base de datos
-        print_status "Probando conexión a la base de datos..."
-        print_success "Base de datos '$DB_NAME' creada correctamente"
-        print_warning "Nota: Esta es una plantilla básica. Agrega tus propias tablas y migraciones según necesites."
-        fi
-    else
-        print_warning "PostgreSQL no detectado. Por favor instala PostgreSQL para usar la base de datos."
-    fi
+    print_status "SQL Server: crea la base '$DB_NAME' (SSMS / sqlcmd) y ejecuta npm run db:schema cuando la instancia esté lista."
     
     # Verificar configuración
     print_status "Verificando configuración..."

@@ -1,5 +1,5 @@
 {
-	"name": "@frankman-task-fast/web",
+	"name": "@fullstack-starter/web",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
@@ -12,9 +12,10 @@
 		"format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
 		"preview": "vite preview",
 		"type-check": "tsc --noEmit",
-		"clean": "rm -rf dist"
+		"clean": "rimraf dist"
 	},
 	"dependencies": {
+		"@fullstack-starter/shared": "*",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
 		"react-router-dom": "^6.28.0",
@@ -38,6 +39,7 @@
 		"tailwindcss": "^3.4.15",
 		"typescript": "~5.8.3",
 		"typescript-eslint": "^8.39.1",
-		"vite": "^7.1.2"
+		"vite": "^7.1.2",
+		"rimraf": "^6.0.1"
 	}
 }

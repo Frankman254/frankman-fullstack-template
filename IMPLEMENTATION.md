@@ -1,4 +1,4 @@
-# 🏗️ Implementación de FrankmanTaskFast
+# Implementación técnica (Full-Stack Starter)
 
 ## 📋 Resumen de la Implementación
 
@@ -40,7 +40,7 @@ Esta plantilla fue diseñada para ser **compacta, funcional y fácil de entender
 ```
 apps/
 ├─ web/    # Frontend: React + Vite + Tailwind
-└─ api/    # Backend: Express + TypeScript + PostgreSQL
+└─ api/    # Backend: Express + TypeScript + SQL Server
 ```
 
 ### 3. **Packages Compartidos**
@@ -194,7 +194,7 @@ rules: {
 1. Componente React hace petición
 2. API endpoint recibe request
 3. Validación con Zod
-4. Query a PostgreSQL
+4. Query a SQL Server
 5. Response con tipos compartidos
 
 ### **Tipos Compartidos**

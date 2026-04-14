@@ -1,26 +1,21 @@
-# Base de datos (PostgreSQL)
+# Base de datos (Microsoft SQL Server)
 
-## Cómo crear las tablas (primera vez o tras cambios en el schema)
+## Aplicar el esquema
 
-Desde la raíz del monorepo:
+Desde la raíz del monorepo (con SQL Server en marcha y base `DB_NAME` creada):
 
 ```bash
-cd apps/api
 npm run db:schema
 ```
 
-O desde la raíz:
+O solo el workspace de la API:
 
 ```bash
-npm run db:schema --workspace=@frankman-task-fast/api
+npm run db:schema --workspace=@fullstack-starter/api
 ```
 
-Eso ejecuta `schema.sql` contra la base definida en `apps/api/.env` (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT).
+Eso ejecuta `schema.sql` (T-SQL: tablas `dbo.projects` y `dbo.tasks`) usando las variables `DB_*` del `.env` en la raíz.
 
-## Estructura del schema
+## Tipos TypeScript
 
-- **projects**: tableros (boards). Columnas: `id`, `name`, `description`, `created_at`, `updated_at`.
-- **tasks**: tareas (cards) de un tablero. Columnas: `id`, `project_id` (FK a projects), `title`, `description`, `position`, `created_at`, `updated_at`.
-- **Triggers**: al hacer UPDATE en una fila, `updated_at` se actualiza solo.
-
-Los tipos TypeScript equivalentes están en `shared/types.ts` (Project, Task) para usarlos en API y frontend.
+Los tipos equivalentes están en `@fullstack-starter/shared` (`packages/shared`, entidades `Project`, `Task`).

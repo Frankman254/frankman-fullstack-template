@@ -1,6 +1,6 @@
-# 🚀 FrankmanTaskFast
+# Full-Stack Starter
 
-**Plantilla de proyecto full-stack optimizada** con monorepo, diseñada para ser compacta, funcional y fácil de entender.
+**Plantilla full-stack neutra** (monorepo): React + Express + **Microsoft SQL Server**, lista para personalizar nombre de producto y dominio.
 
 ## ⚡ Inicio Rápido
 
@@ -54,12 +54,14 @@ Esta plantilla está diseñada para ser **completamente personalizable**:
 ## 🏗️ Estructura Compacta
 
 ```
-frankman-task-fast/
+fullstack-starter/
 ├─ apps/
-│  ├─ web/          # React + Vite + Tailwind (frontend)
-│  └─ api/          # Express + TypeScript + PostgreSQL (backend)
-├─ scripts/         # Scripts de configuración
-└─ .env.example     # Variables de entorno
+│  ├─ web/          # React + Vite + Tailwind
+│  └─ api/          # Express + TypeScript + SQL Server (mssql)
+├─ packages/
+│  └─ shared/       # @fullstack-starter/shared (tipos / DTOs)
+├─ scripts/
+└─ .env.example
 ```
 
 ## 🚀 Comandos Principales
@@ -100,15 +102,14 @@ npm run clean       # Limpiar builds
 ### Backend
 
 - **Express.js** + **TypeScript**
-- **PostgreSQL** con conexión configurada
-- **Endpoints básicos** para testing
-- **Plantilla limpia** lista para personalizar
+- **SQL Server** vía el driver **`mssql`**
+- Rutas de ejemplo (`/health`, `/api/test-db`, proyectos/tareas)
 
 ### Compartido
 
-- **npm workspaces** para monorepo
-- **Tipos compartidos** entre apps
-- **Configuraciones centralizadas**
+- **npm workspaces** (`apps/*`, `packages/*`)
+- **`@fullstack-starter/shared`**
+- Variables de entorno alineadas entre API y Vite
 
 ## 🔧 Configuración Manual
 
@@ -128,40 +129,35 @@ npm install
 
 > **Nota para Windows:** Se usa `--force` para asegurar que las dependencias opcionales de Rollup se instalen correctamente. Esto es necesario debido a un bug conocido de npm con dependencias opcionales en Windows.
 
-### 2. Base de datos en Docker (PostgreSQL)
+### 2. SQL Server (instancia que ya tengas o Docker opcional)
 
-**Este proyecto usa PostgreSQL**, no SQL Server. Si ya tienes SQL Server en Docker (puerto 1433), necesitas un contenedor aparte para PostgreSQL (puerto 5432).
+La API espera una instancia accesible (`DB_HOST`, `DB_PORT`, usuario/contraseña) y una **base ya creada** (`DB_NAME`). Crea la base en SSMS / Azure Data Studio, por ejemplo:
 
-Desde la raíz del proyecto:
-
-```bash
-# Levantar solo PostgreSQL (nombre del contenedor: frankman-task-fast-db)
-docker compose up -d
-
-# Ver logs
-docker compose logs -f postgres
+```sql
+CREATE DATABASE app_dev;
 ```
 
-Valores por defecto del contenedor (coinciden con el código): usuario `postgres`, contraseña `password`, base de datos `frankman_task_fast`, puerto **5432**. Para usar otros valores, define `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_PORT` en tu `.env` antes de `docker compose up`.
+**Si ya tienes** un contenedor como `sqlserver-dev` en **localhost:1433**, deja `DB_PORT=1433` en `.env` y no hace falta el `docker-compose` de este repo.
 
-### 3. Variables de Entorno
+**Contenedor opcional** (perfil `local-db`, puerto host **14333** para no chocar con otra instancia en 1433):
+
+```bash
+docker compose --profile local-db up -d
+```
+
+Ajusta en `.env` `DB_PORT=14333` (o el puerto que mapees) y la misma contraseña en `DB_PASSWORD` y `MSSQL_SA_PASSWORD` del compose.
+
+### 3. Variables de entorno
 
 ```bash
 cp .env.example .env
-# Editar .env con tus credenciales (DB_HOST=localhost, DB_PORT=5432 para Docker)
+# Ajusta DB_* y, si aplica, API_BASE_URL / CORS_ORIGIN
 ```
 
-### 4. Base de Datos (tras tener PostgreSQL corriendo)
+### 4. Esquema en la base
 
 ```bash
-# Si usas Docker: la base ya está creada al levantar el contenedor
-
-# Ejecutar migraciones (cuando existan)
-cd apps/api
-npm run migrate
-
-# Poblar con datos de ejemplo (cuando existan)
-npm run seed
+npm run db:schema
 ```
 
 ## 📦 URLs de Desarrollo

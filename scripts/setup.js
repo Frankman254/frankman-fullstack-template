@@ -7,11 +7,12 @@
 
 import { execSync } from 'child_process';
 import { existsSync, copyFileSync } from 'fs';
+import { join } from 'path';
 import { platform } from 'os';
 
 const isWindows = platform() === 'win32';
 
-console.log('🚀 Configurando FrankmanTaskFast...\n');
+console.log('🚀 Configurando el monorepo full-stack...\n');
 
 // Verificar Node.js
 try {
@@ -67,6 +68,21 @@ if (!existsSync('.env')) {
 	console.log('   Por favor edita el archivo .env con tus credenciales\n');
 } else {
 	console.log('⚠️  Archivo .env ya existe\n');
+}
+
+const webEnv = join('apps', 'web', '.env');
+const webEnvExample = join('apps', 'web', '.env.example');
+if (!existsSync(webEnv)) {
+	if (existsSync(webEnvExample)) {
+		copyFileSync(webEnvExample, webEnv);
+		console.log('✅ Creado apps/web/.env desde apps/web/.env.example\n');
+	} else {
+		console.log(
+			'⚠️  No hay apps/web/.env.example; crea apps/web/.env manualmente si el frontend lo necesita\n'
+		);
+	}
+} else {
+	console.log('⚠️  apps/web/.env ya existe\n');
 }
 
 // Verificar que todo funciona

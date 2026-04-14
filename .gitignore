@@ -106,5 +106,5 @@ temp/
 *.sln
 *.sw?
 
-# Local development
-.env.example
+# Local development (commit .env.example; never commit real secrets)
+.env.bak

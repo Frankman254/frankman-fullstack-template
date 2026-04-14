@@ -1,4 +1,4 @@
-# 🚀 FrankmanTaskFast - Plantilla de Proyecto
+# Full-Stack Starter — plantilla de proyecto
 
 ## 📋 Descripción
 Plantilla optimizada para proyectos full-stack con monorepo, diseñada para ser compacta, funcional y fácil de entender.
@@ -6,7 +6,7 @@ Plantilla optimizada para proyectos full-stack con monorepo, diseñada para ser 
 ## 🏗️ Estructura del Proyecto
 
 ```
-frankman-task-fast/
+fullstack-starter/
 ├─ apps/
 │  ├─ web/                  # Frontend: React + Vite + Tailwind
 │  │  ├─ src/

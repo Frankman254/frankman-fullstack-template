@@ -1,7 +1,6 @@
-# 🚀 FrankmanTaskFast - Script de Configuración para Windows (PowerShell)
-# Este script configura automáticamente el proyecto en Windows
+# 🚀 Monorepo full-stack — configuración para Windows (PowerShell)
 
-Write-Host "🚀 Configurando FrankmanTaskFast..." -ForegroundColor Cyan
+Write-Host "🚀 Configurando el monorepo full-stack..." -ForegroundColor Cyan
 Write-Host ""
 
 # Verificar Node.js
@@ -56,6 +55,20 @@ if (-not (Test-Path ".env")) {
     Write-Host ""
 } else {
     Write-Host "⚠️  Archivo .env ya existe" -ForegroundColor Yellow
+    Write-Host ""
+}
+
+if (-not (Test-Path "apps/web/.env")) {
+    if (Test-Path "apps/web/.env.example") {
+        Copy-Item "apps/web/.env.example" "apps/web/.env"
+        Write-Host "✅ Creado apps/web/.env desde apps/web/.env.example" -ForegroundColor Green
+        Write-Host ""
+    } else {
+        Write-Host "⚠️  No hay apps/web/.env.example" -ForegroundColor Yellow
+        Write-Host ""
+    }
+} else {
+    Write-Host "⚠️  apps/web/.env ya existe" -ForegroundColor Yellow
     Write-Host ""
 }
 

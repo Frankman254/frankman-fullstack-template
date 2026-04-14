@@ -1,25 +1,23 @@
-# PostgreSQL para FrankmanTaskFast (este proyecto usa PostgreSQL, no SQL Server)
-# Uso: docker compose up -d
-# La API espera por defecto: host=localhost, port=5432, user=postgres, db=frankman_task_fast
+# SQL Server opcional (perfil local-db). Si ya tienes un contenedor en 1433 (p. ej. sqlserver-dev),
+# no levantes este servicio: conecta la API a localhost:1433 con tu .env.
+#
+# Uso: docker compose --profile local-db up -d
+# Puerto host por defecto 14333 → evita choque con otra instancia en 1433.
 
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: frankman-task-fast-db
+  sqlserver:
+    profiles: ["local-db"]
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fullstack-starter-sqlserver
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-      POSTGRES_DB: ${DB_NAME:-frankman_task_fast}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: ${DB_PASSWORD:-YourStrong@Passw0rd}
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${DB_PORT:-14333}:1433"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-frankman_task_fast}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - sqlserver_data:/var/opt/mssql
 
 volumes:
-  postgres_data:
+  sqlserver_data:

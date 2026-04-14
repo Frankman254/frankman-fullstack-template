@@ -1,23 +1,62 @@
 /**
- * CONEXIÓN A POSTGRESQL
- * ---------------------
- * Este archivo crea un "pool" (grupo de conexiones) a la base de datos.
- * Usamos un pool para no abrir/cerrar una conexión en cada request;
- * el pool reutiliza conexiones y así la API va más rápido.
+ * Pool de conexiones Microsoft SQL Server (driver `mssql`).
+ * Crea la base `DB_NAME` en SSMS / Azure Data Studio antes de `npm run db:schema` si aún no existe.
  */
 
-import 'dotenv/config'; // Lee el archivo .env y pone las variables en process.env
-import { Pool } from 'pg'; // Pool es la clase del paquete "pg" para conectar a PostgreSQL
+import 'dotenv/config';
+import sql from 'mssql';
 
-// Cadena de conexión: "postgresql://usuario:contraseña@servidor:puerto/nombre_base"
-// Exportada solo para pruebas (ej. mostrarla en el frontend); en producción no exponer.
-export const connectionString = `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
-// Creamos el pool con esa cadena. Lo exportamos para usarlo en las rutas (app.ts).
-export const pool = new Pool({
-	connectionString,
-	ssl: false, // En desarrollo no usamos SSL; en producción suele ser true
-});
+function buildConfig(): sql.config {
+	const password = process.env.DB_PASSWORD ?? '';
+	const trustServerCertificate =
+		process.env.DB_TRUST_SERVER_CERTIFICATE !== 'false';
 
-// Opcional: escuchar eventos del pool para ver en consola cuándo hay conexión o error
-pool.on('connect', () => console.log('📦 Conectado a PostgreSQL'));
-pool.on('error', err => console.error('❌ Error de base de datos:', err));
+	return {
+		user: process.env.DB_USER ?? 'sa',
+		password,
+		server: process.env.DB_HOST ?? 'localhost',
+		port: parseInt(process.env.DB_PORT ?? '1433', 10),
+		database: process.env.DB_NAME ?? 'master',
+		options: {
+			encrypt: process.env.DB_ENCRYPT === 'true',
+			trustServerCertificate,
+		},
+		pool: {
+			max: 10,
+			min: 0,
+			idleTimeoutMillis: 30000,
+		},
+	};
+}
+
+let pool: sql.ConnectionPool | null = null;
+
+export async function connectPool(): Promise<void> {
+	if (pool) return;
+	pool = await new sql.ConnectionPool(buildConfig()).connect();
+}
+
+export function getPool(): sql.ConnectionPool {
+	if (!pool) {
+		throw new Error(
+			'Base de datos no inicializada: llama a connectPool() antes de usar la API.'
+		);
+	}
+	return pool;
+}
+
+export async function closePool(): Promise<void> {
+	if (pool) {
+		await pool.close();
+		pool = null;
+	}
+}
+
+/** Resumen sin contraseña (solo para depuración en desarrollo). */
+export function getConnectionSummary(): string {
+	const c = buildConfig();
+	const mask = c.password ? '***' : '(vacía)';
+	return `Server=${c.server},${c.port};Database=${c.database};User=${c.user};Password=${mask}`;
+}
+
+export { sql };

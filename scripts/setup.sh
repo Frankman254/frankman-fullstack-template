@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# 🚀 FrankmanTaskFast - Script de Configuración
-# Este script configura automáticamente el proyecto
+# Full-Stack Starter — script de configuración
 
 set -e
 
-echo "🚀 Configurando FrankmanTaskFast..."
+echo "🚀 Configurando Full-Stack Starter..."
 
 # Colores para output
 RED='\033[0;31m'
@@ -73,35 +72,7 @@ else
     print_warning "Archivo .env ya existe"
 fi
 
-# Verificar PostgreSQL
-if command -v psql &> /dev/null; then
-    print_success "PostgreSQL detectado"
-    
-    # Preguntar si crear la base de datos
-    read -p "¿Crear la base de datos 'frankman_task_fast'? (y/n): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_status "Creando base de datos..."
-        createdb frankman_task_fast 2>/dev/null || print_warning "Base de datos ya existe o error al crear"
-        
-        # Ejecutar migraciones
-        print_status "Ejecutando migraciones..."
-        cd apps/api
-        npm run migrate 2>/dev/null || print_warning "Error al ejecutar migraciones"
-        
-        # Preguntar si poblar con datos de ejemplo
-        read -p "¿Poblar con datos de ejemplo? (y/n): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            print_status "Poblando base de datos..."
-            npm run seed 2>/dev/null || print_warning "Error al poblar base de datos"
-        fi
-        
-        cd ../..
-    fi
-else
-    print_warning "PostgreSQL no detectado. Por favor instala PostgreSQL para usar la base de datos."
-fi
+print_status "Base de datos: Microsoft SQL Server. Crea la base (p. ej. app_dev) y ejecuta npm run db:schema cuando tengas la instancia en marcha."
 
 # Verificar que todo funciona
 print_status "Verificando configuración..."

@@ -46,11 +46,11 @@ const App: FC = () => {
 			<header className="bg-white shadow">
 				<div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
 					<h1 className="text-3xl font-bold text-gray-900">
-						{import.meta.env.VITE_APP_NAME || 'FrankmanTaskFast'}
+						{import.meta.env.VITE_APP_NAME || 'MyApp'}
 					</h1>
 					<p className="mt-2 text-gray-600">
 						{import.meta.env.VITE_APP_DESCRIPTION ||
-							'Kanban-Gantt Project Management'}
+							'Full-stack starter (React + Express + SQL Server)'}
 					</p>
 				</div>
 			</header>

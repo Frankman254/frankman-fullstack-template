@@ -19,9 +19,11 @@ export default function Footer() {
 				{state.status === 'success' && (
 					<>
 						<span className="text-green-400 text-sm">
-							✓ DB OK —{' '}
-							{state.data.postgres_version?.split(' ')[0]}{' '}
-							{state.data.postgres_version?.split(' ')[1]} · API:{' '}
+							✓ SQL Server OK —{' '}
+							{state.data.sql_version
+								?.split('\n')[0]
+								?.slice(0, 72)}
+							{' · API: '}
 							{getBaseUrl()}
 						</span>
 						{state.data.connectionString && (

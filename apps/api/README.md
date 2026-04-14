@@ -1,66 +1,35 @@
-# Backend API (para aprender)
+# Backend API
 
-API mínima con **Express** + **PostgreSQL**. Solo tres archivos importantes.
+API mínima con **Express**, **TypeScript** y **Microsoft SQL Server** (paquete `mssql`).
 
-## Cómo se ejecuta todo (orden real)
+## Arranque
 
-1. Ejecutas `npm run dev` → Node arranca **server.ts**.
-2. **server.ts** carga `.env` (variables de entorno) e importa **app.ts**.
-3. Hace `app.listen(3001)` → el servidor HTTP queda escuchando en el puerto 3001.
-4. Cuando llega una petición (ej. `GET http://localhost:3001/health`), Express la pasa a **app.ts**.
-5. En **app.ts** se comprueba la URL y el método (GET/POST…) y se ejecuta la ruta que coincida.
-6. Si la ruta necesita datos, usa **pool** (de **db/pool.ts**) para hacer `pool.query('SELECT ...')` contra PostgreSQL.
+1. `server.ts` carga `.env`, llama a `connectPool()` y luego importa `app.ts`.
+2. Las rutas usan `getPool()` para obtener el `ConnectionPool` ya conectado.
 
-## Qué hace cada archivo
+## Archivos clave
 
-| Archivo      | Qué hace en una frase |
-|-------------|------------------------|
-| **server.ts** | Arranca el servidor en un puerto (punto de entrada). |
-| **app.ts**    | Define las rutas (GET /health, GET /api/test-db) y los middlewares. |
-| **db/pool.ts**| Crea la conexión a PostgreSQL y exporta `pool` para hacer consultas. |
+| Archivo | Rol |
+|---------|-----|
+| `server.ts` | Conecta a SQL Server y pone Express a escuchar. |
+| `app.ts` | Middlewares y rutas HTTP. |
+| `db/pool.ts` | Configuración y pool `mssql`. |
+| `db/schema.sql` | T-SQL de ejemplo (`dbo.projects`, `dbo.tasks`). |
+| `db/run-schema.ts` | Aplica `schema.sql` (`npm run db:schema`). |
 
-## Conceptos que debes conocer
+## Variables de entorno
 
-- **Express**: librería para crear un servidor HTTP y definir rutas (URL + método → respuesta).
-- **Ruta**: `app.get('/ruta', (req, res) => { ... })` = “cuando pidan GET /ruta, ejecuta esta función”.
-- **Middleware**: función que se ejecuta en cada petición (ej. `cors()`, `express.json()`).
-- **pool.query('SQL')**: ejecuta una consulta SQL en PostgreSQL y devuelve una Promise con `rows`.
-- **res.json(objeto)**: envía al cliente una respuesta en JSON y cierra la petición.
-- **res.status(500)**: indica código HTTP (ej. 500 = error del servidor).
+Ver `.env.example` en la raíz del monorepo: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_ENCRYPT`, `DB_TRUST_SERVER_CERTIFICATE`, `BACKEND_PORT`, etc.
 
-## Cómo añadir una ruta nueva (ejemplo)
+## Consultas
 
-En **app.ts**, después de las rutas que ya hay:
+Ejemplo con parámetro:
 
 ```ts
-// GET /api/ejemplo → devuelve un mensaje
-app.get('/api/ejemplo', (_req, res) => {
-  res.json({ mensaje: 'Hola desde la API' });
-});
+const pool = getPool();
+const result = await pool
+  .request()
+  .input('id', sql.Int, projectId)
+  .query('SELECT ... WHERE project_id = @id');
+// result.recordset
 ```
-
-Para una ruta que consulte la base de datos:
-
-```ts
-app.get('/api/usuarios', async (_req, res) => {
-  try {
-    const result = await pool.query('SELECT id, nombre FROM usuarios');
-    res.json({ data: result.rows });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al leer la base de datos' });
-  }
-});
-```
-
-Guarda, reinicia `npm run dev` y prueba con el navegador o con el botón “Probar conexión DB” del frontend (para /api/test-db).
-
-## Variables de entorno (.env)
-
-Si existe un `.env` en la raíz del monorepo o en `apps/api`, el backend usa por ejemplo:
-
-- `BACKEND_PORT` → puerto donde escucha la API (por defecto 3001).
-- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` → conexión a PostgreSQL.
-- O una sola variable `DATABASE_URL` con la URL completa de conexión.
-
-Así puedes cambiar credenciales o puerto sin tocar el código.

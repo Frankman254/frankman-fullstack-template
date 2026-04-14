@@ -10,7 +10,7 @@ export const getBaseUrl = () => FRONTEND_CONFIG.apiBaseUrl ?? '';
 
 export type TestDbSuccess = {
 	current_time: string;
-	postgres_version: string;
+	sql_version: string;
 	connectionString?: string;
 };
 

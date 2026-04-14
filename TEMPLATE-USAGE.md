@@ -1,4 +1,4 @@
-# 🚀 Guía de Uso de la Plantilla FrankmanTaskFast
+# Guía de uso de la plantilla (Full-Stack Starter)
 
 ## 📋 Resumen
 

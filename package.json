@@ -1,17 +1,18 @@
 {
-	"name": "frankman-task-fast",
+	"name": "fullstack-starter",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
 	"workspaces": [
-		"apps/*"
+		"apps/*",
+		"packages/*"
 	],
 	"scripts": {
 		"postinstall": "node scripts/postinstall.js",
 		"dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
 		"dev:web": "cd apps/web && npm run dev",
 		"dev:api": "cd apps/api && npm run dev",
-		"build": "npm run build --workspaces --if-present",
+		"build": "npm run build -w @fullstack-starter/api && npm run build -w @fullstack-starter/web",
 		"build:web": "cd apps/web && npm run build",
 		"build:api": "cd apps/api && npm run build",
 		"lint": "npm run lint --workspaces --if-present",
@@ -34,6 +35,7 @@
 	"devDependencies": {
 		"baseline-browser-mapping": "^2.9.19",
 		"concurrently": "^9.1.2",
+		"rimraf": "^6.0.1",
 		"typescript": "~5.8.3"
 	}
 }

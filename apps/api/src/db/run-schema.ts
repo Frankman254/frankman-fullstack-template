@@ -1,27 +1,28 @@
 /**
- * Ejecuta el archivo schema.sql contra la base de datos.
- * Uso: npx tsx src/db/run-schema.ts   (desde apps/api)
- * o:   npm run db:schema
- *
- * Requiere que PostgreSQL esté corriendo y que .env tenga DB_* correctos.
+ * Ejecuta schema.sql contra SQL Server.
+ * Requiere instancia en marcha, credenciales en .env y base DB_NAME ya creada.
  */
 import 'dotenv/config';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { pool } from './pool.js';
+import { closePool, connectPool, getPool } from './pool.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const schemaPath = path.join(__dirname, 'schema.sql');
 
 async function run() {
-	const sql = readFileSync(schemaPath, 'utf-8');
-	await pool.query(sql);
-	console.log('✅ Schema aplicado correctamente (tablas projects y tasks creadas).');
-	await pool.end();
+	await connectPool();
+	const pool = getPool();
+	const sqlText = readFileSync(schemaPath, 'utf-8');
+	await pool.request().query(sqlText);
+	console.log(
+		'✅ Schema aplicado correctamente (tablas dbo.projects y dbo.tasks).'
+	);
+	await closePool();
 }
 
-run().catch((err) => {
+run().catch(err => {
 	console.error('❌ Error aplicando schema:', err);
 	process.exit(1);
 });
